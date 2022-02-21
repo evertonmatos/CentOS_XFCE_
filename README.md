@@ -62,7 +62,7 @@ Get the actual IP using the command
 #### Clone project
 
 ```bash
-git clone --branch ansible https://github.com/evertonmatos/CentOS_XFCE/
+git clone https://github.com/evertonmatos/CentOS_XFCE_/
 ```
 
 ### Installing
