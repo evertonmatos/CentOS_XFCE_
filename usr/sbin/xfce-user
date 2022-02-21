@@ -1,0 +1,39 @@
+#!/bin/sh
+CONFFILE=$1
+source $CONFFILE
+
+case $2 in
+	add)
+		echo "CONFIGURANDO PARAMETROS"
+		NAMEUSER=$3
+		GEKOS=$4
+
+		echo "CRIANDO USUARIO $GEKOS"
+		echo "CRIANDO HOME"
+        useradd $NAMEUSER -c "$GEKOS" -m -k $SKEL
+        { echo "$NAMEUSER:$NAMEUSER" | chpasswd > /dev/null 2>&1 && echo "Ajustada senha do usuario '$NAMEUSER'"; }
+		find /home/$NAMEUSER -type f -print0 | xargs -0 chmod 644
+		find /home/$NAMEUSER -type d -print0 | xargs -0 chmod 755
+		chmod +x /home/$NAMEUSER/desktop/*.desktop
+		rm -rf /home/$NAMEUSER/*/.null
+		;;
+	reset)
+		chattr -i /home/$3/desktop/*.desktop
+		pkill -9 -u `id -u $3`
+		sleep 3 && userdel -r $3
+		rm -rf /home/$3
+		echo $INSTALLERDIR
+		$INSTALLERDIR/usr/sbin/xfce-user $1 add $3 $4
+		;;
+	diff)
+		rsync -rnzv --existing /home/$3/.config/ $INSTALLERDIR/etc/skel-xfce/.config/ | grep "/" | grep -v bytes\/sec
+		a=`rsync -rnzv --existing /home/$3/.config/ $INSTALLERDIR/etc/skel-xfce/.config/ | grep "/" | grep -v bytes\/sec`
+		;;
+	sync)
+		/usr/bin/cp -rf /home/$3/.config/$4 $INSTALLERDIR/etc/skel-xfce/.config/$4
+		;;
+	*)
+		echo "Utilize: $0 config.conf add username gekos"
+		exit 1
+		;;
+esac

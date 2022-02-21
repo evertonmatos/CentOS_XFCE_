@@ -1,0 +1,17 @@
+---
+- hosts: all
+  gather_facts: no
+  become: true
+  vars_files:
+    - ../vars.yml
+  tasks:
+
+    - name: Configure DNS
+      lineinfile:
+        dest: "/etc/resolv.conf"
+        state: present
+        create: yes
+        line: "{{ item }}"
+      with_items:
+        - "{{ dns1 }}"
+        - "{{ dns2 }}"

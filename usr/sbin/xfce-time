@@ -1,0 +1,15 @@
+#! /bin/sh
+CONFFILE=$1
+source $CONFFILE
+
+case $2 in
+	update)
+		echo -e
+		xfce-yum ntpdate
+		{ echo "Atualizando hora" && ntpdate -u a.ntp.br > /dev/null 2>&1 && hwclock -w > /dev/null 2>&1 && echo "Hora atualizada com sucesso"; } || { echo "Nao foi possivel atualizar a hora"; }
+		;;
+	*)
+		echo "Utilize: $0 config.conf update"
+		exit 1
+		;;
+esac

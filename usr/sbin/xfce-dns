@@ -1,0 +1,16 @@
+#! /bin/sh
+CONFFILE=$1
+source $CONFFILE
+
+case $2 in
+	update)
+		echo -e "\nConfigurando DNS"
+		echo "$HOST > /etc/resolv.conf"
+		echo "nameserver $DNS1" >> /etc/resolv.conf
+		echo "nameserver $DNS2" >> /etc/resolv.conf
+		;;
+	*)
+		echo "Utilize: $0 config.conf update"
+		exit 1
+		;;
+esac

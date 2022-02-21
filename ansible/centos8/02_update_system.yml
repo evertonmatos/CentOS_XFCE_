@@ -1,0 +1,9 @@
+---
+- hosts: all
+  gather_facts: no
+  become: true
+  tasks:
+
+    # sudo yum update
+    - name : Update all packages
+      yum: name=* state=latest update_cache=true

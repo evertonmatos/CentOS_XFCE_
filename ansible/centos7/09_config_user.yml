@@ -1,0 +1,41 @@
+---
+- hosts: all
+  gather_facts: no
+  become: true
+  vars_files:
+    - ../vars.yml
+    - ../../config.yml
+  tasks:
+
+    - name: Detect if user exists
+      ansible.builtin.shell: "id -u {{ username }}"
+      register: user_exists
+      ignore_errors: yes
+
+    - name: Adding username "{{ username }} | {{ gekos }}"
+      shell: "useradd {{ username }} -c '{{ gekos }}' -m -k {{ skel }}"
+      when: user_exists.rc != 0
+
+    - name: Configuring password (same as username)
+      shell: "echo {{ username }}:{{ username }} | chpasswd"
+
+    - name: Configuring permissions for home folder
+      shell: "find /home/{{ username }} -type f -print0 | xargs -0 chmod 0644"
+
+    - name: Configuring permissions for home files
+      shell: "find /home/{{ username }} -type d -print0 | xargs -0 chmod 0755"
+
+    - name: Configuring permissions for desktop files
+      shell: "chmod +x /home/{{ username }}/desktop/*.desktop"
+
+    - name: Remove .null files
+      ansible.builtin.file:
+        path: "/home/{{ username }}/{{ item }}/.null"
+        state: absent
+      loop:
+        - "documents"
+        - "images"
+        - "musics"
+        - "public"
+        - "templates"
+        - "videos"

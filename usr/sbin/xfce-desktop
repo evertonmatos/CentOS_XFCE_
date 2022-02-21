@@ -1,0 +1,61 @@
+#!/bin/bash
+CONFFILE=$1
+source $CONFFILE
+
+case $2 in
+	X11)
+		echo "X WINDOW SYSTEM"
+		xfce-yum epel-release && rpm -Uvh http://li.nux.ro/download/nux/dextop/el7/x86_64/nux-dextop-release-0-5.el7.nux.noarch.rpm
+		xfce-yum glx-utils mesa-dri-drivers plymouth-system-theme spice-vdagent xorg-x11-drivers xorg-x11-server-Xorg xorg-x11-utils xorg-x11-xauth xorg-x11-xinit xvattr
+		;;
+	xfce)
+		echo "INSTALANDO XFCE"
+		xfce-yum Thunar xfce4-panel xfce4-session xfce4-settings xfconf xfdesktop xfwm4 gdm openssh-askpass orage polkit-gnome thunar-archive-plugin thunar-volman tumbler xfce4-appfinder xfce4-power-manager xfce4-session-engines xfce4-terminal xfce4-screenshooter xfce4-whiskermenu-plugin xfce4-netload-plugin xfce4-clipman-plugin xfce4-datetime-plugin network-manager-applet pavucontrol xfce4-pulseaudio-plugin gvfs xfce4-notifyd gtk-murrine-engine
+		;;
+	desktop)
+		echo "INSTALANDO DESKTOP-APPS"
+		xfce-yum ristretto evince firefox gimp xarchiver ImageMagick git inkscape wget mousepad gnome-screensaver wine
+		yum -y install https://download.teamviewer.com/download/teamviewer.i686.rpm
+		`which cp` -rf $INSTALLERDIR/usr/bin/ksuperkey /usr/bin/ksuperkey && chmod +x /usr/bin/ksuperkey
+		/usr/bin/cp -rf $INSTALLERDIR/opt/outros/putty64.exe /usr/bin/putty.exe
+		echo "COPIANDO SCRIPTS DO ROOT $SCRIPTSROOT"
+		/usr/bin/cp -rf $INSTALLERDIR/$SCRIPTSROOT/* $SCRIPTSROOT
+		echo "COPIANDO SCRIPTS DO USUARIO $SCRIPTSUSER"
+		/usr/bin/cp -rf $INSTALLERDIR/$SCRIPTSUSER/* $SCRIPTSUSER
+		echo "COPIANDO PROGRAMAS $PROGRAMAS"
+		mkdir -p $PROGRAMAS
+		/usr/bin/cp -rf $INSTALLERDIR/$PROGRAMAS/* $PROGRAMAS
+		echo "COPIANDO MENUS $MENU"
+		mkdir -p $MENU
+		/usr/bin/cp -rf $INSTALLERDIR/$MENU/* $MENU
+		echo "COPIANDO APLICACOES $APPLICATIONS"
+		mkdir -p $APPLICATIONS
+		/usr/bin/cp -rf $INSTALLERDIR/$APPLICATIONS/* $APPLICATIONS
+		echo "COPIANDO SKEL $SKEL"
+		mkdir -p $SKEL
+		/usr/bin/cp -rf $INSTALLERDIR/$SKEL /etc
+		echo "COPIANDO FONTES $FONTS"
+		mkdir -p $FONTS
+		/usr/bin/cp -rf $INSTALLERDIR/$FONTS/* $FONTS
+		fc-cache -f -v &> /dev/null
+		echo "COPIANDO ICONES $ICONS"
+		/usr/bin/cp -rf $INSTALLERDIR/$ICONS/* $ICONS
+		echo "COPIANDO TEMAS $THEMES"
+		/usr/bin/cp -rf $INSTALLERDIR/$THEMES/* $THEMES
+		echo "COPIANDO WALLPAPERS $WALLPAPERS"
+		/usr/bin/cp -rf $INSTALLERDIR/$WALLPAPERS/* $WALLPAPERS
+		gtk-update-icon-cache $ICONS/Arc &> /dev/null
+		gtk-update-icon-cache $ICONS/Paper &> /dev/null
+		rm -rf /usr/share/applications/wine-notepad.desktop
+		;;
+	multi-user)
+		echo "INSTALANDO PROGRAMAS PARA TERMINAL TEXTO"
+		xfce-yum epel-release && rpm -Uvh http://li.nux.ro/download/nux/dextop/el7/x86_64/nux-dextop-release-0-5.el7.nux.noarch.rpm
+		xfce-yum net-tools pciutils ntfs-3g vim ntpdate ntsysv xarchiver wget mousepad vsftpd wine gcc ImageMagick iotop dstat lm_sensors make elinks bind telnet unzip mlocate
+		echo "blacklist pcspkr" > /etc/modprobe.d/nobeep.conf
+		;;
+	*)
+		echo "Utilize: $0 config.conf install"
+		exit 1
+		;;
+esac

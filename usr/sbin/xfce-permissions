@@ -1,0 +1,17 @@
+#! /bin/sh
+CONFFILE=$1
+source $CONFFILE
+
+case $2 in
+	dirset)
+		find -xtype f | xargs chmod 644
+		find -xtype d | xargs chmod 755
+		chmod 777 $INSTALLERDIR/usr/sbin/*
+		chmod 777 $INSTALLERDIR/usr/bin/*
+		chmod 777 $INSTALLERDIR/inst*
+		;;
+	*)
+		echo "Utilize: $0 config.conf install"
+		exit 1
+		;;
+esac

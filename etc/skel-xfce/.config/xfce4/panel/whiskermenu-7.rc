@@ -1,0 +1,60 @@
+favorites=firefox.desktop,vendabemmenu.desktop,exo-terminal-emulator.desktop,exo-file-manager.desktop,mousepad.desktop
+recent=xfce-wmtweaks-settings.desktop,xfce-wm-settings.desktop,geany.desktop,mousepad.desktop,wine-notepad.desktop
+button-title=LINUX
+button-icon=app-launcher
+button-single-row=false
+show-button-title=true
+show-button-icon=true
+launcher-show-name=true
+launcher-show-description=false
+item-icon-size=3
+hover-switch-category=false
+category-icon-size=1
+load-hierarchy=false
+recent-items-max=5
+favorites-in-recent=true
+display-recent-default=false
+position-search-alternate=true
+position-commands-alternate=true
+position-categories-alternate=false
+menu-width=494
+menu-height=640
+menu-opacity=100
+command-settings=xfce4-settings-manager
+show-command-settings=true
+command-lockscreen=xflock4
+show-command-lockscreen=true
+command-switchuser=gdmflexiserver
+show-command-switchuser=false
+command-logout=xfce4-session-logout
+show-command-logout=true
+command-menueditor=menulibre
+show-command-menueditor=false
+command-profile=mugshot
+show-command-profile=false
+search-actions=4
+
+[action0]
+name=Página principal
+pattern=#
+command=exo-open --launch TerminalEmulator man %s
+regex=false
+
+[action1]
+name=Wikipedia
+pattern=!w
+command=exo-open --launch WebBrowser https://en.wikipedia.org/wiki/%u
+regex=false
+
+[action2]
+name=Executar em terminal
+pattern=!
+command=exo-open --launch TerminalEmulator %s
+regex=false
+
+[action3]
+name=Abrir URI
+pattern=^(file|http|https):\\/\\/(.*)$
+command=exo-open \\0
+regex=true
+

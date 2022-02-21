@@ -1,0 +1,16 @@
+---
+- hosts: all
+  gather_facts: no
+  become: true
+  tasks:
+
+    - name: Installing XFCE
+      shell: "yum groupinstall -y 'Xfce'"
+
+    - name: Installing XFCE Utils
+      shell: "yum install -y xfce4-screenshooter xfce4-whiskermenu-plugin xfce4-netload-plugin
+      xfce4-clipman-plugin xfce4-datetime-plugin network-manager-applet pavucontrol gvfs
+      xfce4-notifyd"
+
+    - name: Removing openbox
+      shell: "yum remove -y openbox"

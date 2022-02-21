@@ -1,0 +1,64 @@
+---
+- hosts: all
+  gather_facts: no
+  become: true
+  vars_files:
+    - ../vars.yml
+    - ../../config.yml
+  tasks:
+    - name: Copy Default Session file
+      ansible.builtin.copy:
+        src: "/usr/share/accountsservice/user-templates/standard"
+        dest: "/etc/accountsservice/user-templates/standard"
+        mode: "644"
+        remote_src: yes
+
+    - name: Configure XFCE as Default Session
+      replace:
+        path: "/etc/accountsservice/user-templates/standard"
+        regexp: "Session=gnome"
+        replace: "Session=xfce"
+
+    - name: Delete content & directory
+      file:
+        state: absent
+        path: "/{{ skel_c8 }}"
+
+    - name: Copy skel files
+      ansible.builtin.copy:
+        src: "{{ remote_installer_dir }}/{{ skel_c8 }}/"
+        dest: "/{{ skel_c8 }}"
+        remote_src: yes
+
+    - name: Detect if user exists
+      ansible.builtin.shell: "id -u {{ username }}"
+      register: user_exists
+      ignore_errors: yes
+
+    - name: Adding username "{{ username }} | {{ gekos }}"
+      shell: "useradd {{ username }} -c '{{ gekos }}' -m -k {{ skel_c8 }}"
+      when: user_exists.rc != 0
+
+    - name: Configuring password (same as username)
+      shell: "echo {{ username }}:{{ username }} | chpasswd"
+
+    - name: Configuring permissions for home folder
+      shell: "find /home/{{ username }} -type f -print0 | xargs -0 chmod 0644"
+
+    - name: Configuring permissions for home files
+      shell: "find /home/{{ username }} -type d -print0 | xargs -0 chmod 0755"
+
+    - name: Configuring permissions for desktop files
+      shell: "chmod +x /home/{{ username }}/desktop/*.desktop"
+
+    - name: Remove .null files
+      ansible.builtin.file:
+        path: "/home/{{ username }}/{{ item }}/.null"
+        state: absent
+      loop:
+        - "documents"
+        - "images"
+        - "musics"
+        - "public"
+        - "templates"
+        - "videos"

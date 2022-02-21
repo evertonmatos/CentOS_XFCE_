@@ -1,0 +1,23 @@
+#!/bin/bash
+
+echo "CONFIGURANDO PARAMETROS"
+IPADDR=192.168.1.150/24
+GATEWAY=192.168.1.1
+DNS1=8.8.8.8
+DNS2=8.8.4.4
+DNSTEST=goo.gl
+NIC=eth0
+HOSTNAME=localhost.localdomain
+ROOT=`pwd`
+ICONS=/usr/share/icons/
+WALLPAPERS=/usr/share/wallpapers/
+THEMES=/usr/share/themes/
+APPLICATIONS=/usr/share/applications/
+FONTS=/usr/share/fonts/
+REPO=/repo/
+
+echo "INSTALANDO PACOTES"
+yum -y install epel-release
+#yum -y groupinstall "X Window system"
+#yum -y groupinstall xfceyum -y install $ROOT/$REPO/packages/*.rpm
+#yum -y install net-tools pciutils ristretto evince ntfs-3g network-manager-applet firefox vim ntpdate gimp ntsysv xfce4-screenshooter ntpdate xfce4-whiskermenu-plugin xarchiver 

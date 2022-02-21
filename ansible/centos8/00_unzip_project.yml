@@ -1,0 +1,24 @@
+---
+- hosts: all
+  gather_facts: no
+  become: true
+  vars_files:
+    - ../vars.yml
+  tasks:
+
+  - name: Create a directory {{ remote_installer_dir }}
+    ansible.builtin.file:
+      path: "{{ remote_installer_dir }}"
+      state: directory
+      mode: '0755'
+
+  - name: Installing unzip
+    yum:
+      name: unzip
+      state: latest
+
+  - name: Unziping {{ project_name }} project
+    ansible.builtin.unarchive:
+      src: "/tmp/{{ remote_installer_dir }}.zip"
+      dest: "{{ remote_installer_dir }}"
+      remote_src: yes

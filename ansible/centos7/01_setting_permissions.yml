@@ -1,0 +1,27 @@
+---
+- hosts: all
+  gather_facts: no
+  become: true
+  vars_files:
+    - ../vars.yml
+  tasks:
+
+    - name: Updating font cache
+      shell: "find -xtype f | xargs chmod 644"
+      args:
+        chdir: "{{ remote_installer_dir }}"
+
+    - name: Updating font cache
+      shell: "find -xtype d | xargs chmod 755"
+      args:
+        chdir: "{{ remote_installer_dir }}"
+
+    - name: Adjusting permissions to the bin files
+      shell: "chmod 777 {{ remote_installer_dir }}/usr/sbin/*"
+      args:
+        chdir: "{{ remote_installer_dir }}"
+
+    - name: Adjusting permissions to the sbin files
+      shell: "chmod 777 {{ remote_installer_dir }}/usr/sbin/*"
+      args:
+        chdir: "{{ remote_installer_dir }}"

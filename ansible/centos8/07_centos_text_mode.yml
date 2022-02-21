@@ -1,0 +1,21 @@
+---
+- hosts: all
+  gather_facts: no
+  become: true
+  tasks:
+
+    - name: Installing epel-release
+      yum:
+        name: epel-release
+        state: latest
+
+    - name: Installing terminal programs
+      shell: "yum install -y net-tools pciutils ntfs-3g vim ntsysv wget mousepad vsftpd gcc
+      ImageMagick iotop dstat lm_sensors make bind telnet unzip mlocate"
+
+    - name: Disable PC Beep
+      lineinfile:
+        dest: "/etc/modprobe.d/nobeep.conf"
+        state: present
+        create: yes
+        line: "blacklist pcspkr"

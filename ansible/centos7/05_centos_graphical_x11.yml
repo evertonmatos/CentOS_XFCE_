@@ -1,0 +1,17 @@
+---
+- hosts: all
+  gather_facts: no
+  become: true
+  tasks:
+
+    - name: Installing epel-release
+      yum:
+        name: epel-release
+        state: latest
+
+    - name: Installing nux dextop repository
+      shell: "rpm -Uvh http://li.nux.ro/download/nux/dextop/el7/x86_64/nux-dextop-release-0-5.el7.nux.noarch.rpm"
+      ignore_errors: yes
+
+    - name: Installing X WINDOW SYSTEM
+      shell: "yum groupinstall -y 'X Window System'"

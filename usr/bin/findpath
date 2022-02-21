@@ -1,0 +1,9 @@
+#!/bin/bash
+
+SCRIPT=`realpath -s $0`
+echo $SCRIPT
+SCRIPTPATH=`dirname $SCRIPT`
+echo $SCRIPTPATH
+
+CONFPATH=`pwd`/$1
+echo $CONFPATH

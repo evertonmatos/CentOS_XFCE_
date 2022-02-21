@@ -1,0 +1,13 @@
+---
+- hosts: all
+  gather_facts: no
+  become: true
+  tasks:
+
+    - name: Installing epel-release
+      yum:
+        name: epel-release
+        state: latest
+
+    - name: Installing X WINDOW SYSTEM
+      shell: "yum groupinstall -y 'base-x'"

@@ -1,0 +1,25 @@
+---
+- hosts: all
+  gather_facts: no
+  become: true
+  vars_files:
+    - ../vars.yml
+  tasks:
+
+    - name: Installing ntpdate
+      yum:
+        name: chrony
+        state: latest
+
+    - name: Enabling service
+      shell: "systemctl enable chronyd"
+
+    - name: Starting service
+      shell: "systemctl start chronyd"
+
+    - name: Saving time into hardware
+      shell: "hwclock -w"
+
+    - name: Adjusting timezone
+      shell: "timedatectl set-timezone {{ timezone }}"
+

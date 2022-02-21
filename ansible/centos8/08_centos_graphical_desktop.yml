@@ -1,0 +1,60 @@
+---
+- hosts: all
+  gather_facts: no
+  become: true
+  vars_files:
+    - ../vars.yml
+  tasks:
+
+    - name: Installing DESKTOP-APPS
+      shell: "yum install -y ristretto evince firefox gimp ImageMagick git inkscape wget mousepad"
+
+    - name: Installing TeamViewer
+      shell: "yum -y install https://download.teamviewer.com/download/teamviewer.i686.rpm"
+#
+    - name: Copy ksuperkey
+      ansible.builtin.copy:
+        src: "{{ remote_installer_dir }}/usr/bin/ksuperkey"
+        dest: "/usr/bin/ksuperkey"
+        mode: "755"
+        remote_src: yes
+
+    - name: Copy putty
+      ansible.builtin.copy:
+        src: "{{ remote_installer_dir }}/opt/outros/putty64.exe"
+        dest: "/usr/bin/putty.exe"
+        mode: "755"
+        remote_src: yes
+
+    - name: Copy {{ project_name }} files
+      ansible.builtin.copy:
+        src: "{{ remote_installer_dir }}/{{ item }}/"
+        dest: "/{{ item }}"
+        remote_src: yes
+      loop:
+        # - "{{ scriptsroot }}" nao terao mais os scripts xfce-*
+        - "{{ scriptsuser }}"
+        - "{{ programas }}"
+        # - "{{ menu }}" /usr/share/desktop-directories/ nao existe
+        - "{{ applications }}"
+        - "{{ fonts }}"
+        - "{{ icons }}"
+        - "{{ themes }}"
+        - "{{ wallpapers }}"
+
+    - name: Updating font cache
+      shell: "fc-cache -f -v"
+
+    - name: Updating icons cache
+      shell: "gtk-update-icon-cache {{ icons }}/{{ item }}"
+      loop:
+        - Arc
+        - Paper
+
+    - name: Remove wine-notepad.desktop
+      ansible.builtin.file:
+        path: /usr/share/applications/wine-notepad.desktop
+        state: absent
+
+    - name: Configuring system to init at graphical interface
+      shell: "systemctl set-default graphical.target"

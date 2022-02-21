@@ -1,0 +1,37 @@
+#! /bin/sh
+SCRIPT=xfce-yum
+
+if [ -z "$*" ]; then
+  MSG="Falta o nome do pacote a instalar"
+  xfce-logger [$SCRIPT]: $MSG
+  exit 1
+fi
+
+j=0
+INSTALAR=()
+
+for i in $*; do
+  if rpm -ql $i > /dev/null 2>&1; then
+    MSG="[Existente]: $i"
+    xfce-logger [$SCRIPT]: $MSG
+  else
+    j=$((j+1))
+    INSTALAR[$j]=$i
+  fi
+done
+
+if [ ! -z "${INSTALAR[*]}" ]; then
+  INSTALLERMSG=$(yum -y install ${INSTALAR[*]})
+  INSTALLEDPACKAGES=`echo "$INSTALLERMSG" | grep Instalando\ \ \ \: | awk -F " " {'print $3'};`
+  NOPACKAGE=`echo "$INSTALLERMSG" | grep Nenhum\ pacote | awk -F " " {'print $3'};`
+fi
+
+if [ ! -z "$INSTALLEDPACKAGES" ]; then
+  MSG=`echo [Instalado]: "$INSTALLEDPACKAGES"`
+  xfce-logger [$SCRIPT]: "$MSG"
+fi
+
+if [ ! -z "$NOPACKAGE" ]; then
+  MSG=`echo [Nao instalado]: "$NOPACKAGE"`
+  xfce-logger [$SCRIPT]: "$MSG"
+fi
