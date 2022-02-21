@@ -82,3 +82,9 @@ Open config.yml file and adjust the name of the user to be created
 ```bash
 ./runner_c8.sh 192.168.0.111 root_password
 ```
+
+Inform root password again when it is needed and wait for installation
+
+![alt text](docs/12-login.png "Login Root")
+
+The computer will be rebooted when it is done
